@@ -1,13 +1,15 @@
 
 # the username to use
-username = 'john.elkins@gmail.com'
+username = 'eriksf4@gmail.com'
 
 # the separator to use for detailed track information
-track_info_separator = u'\\'
-#track_info_separator = u'|'
+#track_info_separator = u'\\'
+track_info_separator = u','
 
 # the order of the track details
-track_info_order = ['title','artist','album','songid']
+#track_info_order = ['title','artist','album','songid']
+#track_info_order = ['songid','title','artist','album']
+track_info_order = ['songid','title','artist','album','discNumber','trackNumber','durationMillis']
 #track_info_order = ['title','artist','album','genre','year','durationMillis','playCount','rating','songid']
 
 # output debug information to the log
@@ -40,4 +42,4 @@ search_title_only = True
 log_high_matches = False
 
 # export "Thumbs Up" playlist
-export_thumbs_up = True
+export_thumbs_up = False
