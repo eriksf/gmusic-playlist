@@ -2,13 +2,15 @@ import common
 import time
 import sys
 
-if len(sys.argv) < 2:
-    common.log('ERROR input file is required')
+if len(sys.argv) < 3:
+    common.log('ERROR input and output file are required')
     time.sleep(3)
     exit()
 
 inputfile = sys.argv[1]
+outputfile = sys.argv[2]
 
+out = open(outputfile, 'w')
 with open(inputfile, 'r') as f:
     api = common.open_api()
     for line in f:
@@ -20,24 +22,36 @@ with open(inputfile, 'r') as f:
 
         results = api.search_all_access(input_album)
 
-        print ''
-        print '=========='
-        print "Checking '%s' by '%s' from %s with %s tracks" % (input_album, input_artist, input_year, input_tracks)
+        out.write('\n')
+        out.write('==========\n')
+        print "Checking '%s' by '%s' from %s with %s tracks..." % (input_album, input_artist, input_year, input_tracks),
+        out.write("Checking '%s' by '%s' from %s with %s tracks\n" % (input_album, input_artist, input_year, input_tracks))
 
+        hits = 0
+        total_album_hits = len(results['album_hits'])
         for album in results['album_hits']:
             name = album['album']['name']
             artist = album['album']['albumArtist']
             album_id = album['album']['albumId']
             if name.startswith(input_album) and input_artist == artist:
+                hits += 1
                 aresults = api.get_album_info(album_id)
+                found_sym = '-'
+                tracks = 'unknown'
+                year = 'unknown'
                 if aresults:
-                    tracks = len(aresults['tracks'])
-                    year = aresults['year']
-                    if tracks >= input_tracks:
-                        print "   * ALBUM: %s  ARTIST: %s  YEAR: %s  TRACKS: %s" % (name, artist, year, tracks)
-                    else:
-                        print "   - ALBUM: %s  ARTIST: %s  YEAR: %s  TRACKS: %s" % (name, artist, year, tracks)
-                else:
-                    print "   * ALBUM: %s  ARTIST: %s  YEAR: unknown  TRACKS: unknown" % (name, artist)
+                    if aresults.has_key('tracks'):
+                        tracks = len(aresults['tracks'])
+                        if tracks >= input_tracks:
+                            found_sym = '*'
+                    if aresults.has_key('year'):
+                        year = aresults['year']
+                out.write("   %s ALBUM: %s  ARTIST: %s  YEAR: %s  TRACKS: %s\n" % (found_sym,
+                                                                                   name.encode('utf-8'),
+                                                                                   artist.encode('utf-8'),
+                                                                                   year,
+                                                                                   tracks))
+        print "%s hits (%s total album hits)" % (hits, total_album_hits)
 
     common.close_api()
+out.close()
