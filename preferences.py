@@ -3,8 +3,9 @@
 username = 'eriksf4@gmail.com'
 
 # the separator to use for detailed track information
-#track_info_separator = u'\\'
 track_info_separator = u','
+#track_info_separator = u'\\'
+#track_info_separator = u'|'
 
 # the order of the track details
 #track_info_order = ['title','artist','album','songid']
@@ -43,3 +44,6 @@ log_high_matches = False
 
 # export "Thumbs Up" playlist
 export_thumbs_up = False
+
+# export "ALL" playlist
+export_all = True
